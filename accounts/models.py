@@ -42,8 +42,7 @@ class CustomUser(AbstractUser):
 
     username = models.CharField(max_length=80, unique=False, blank=True, null=True)
     email = models.EmailField(max_length=80,  null=True, blank=True)
-    user_type = models.CharField(max_length=10, choices=[('superAdmin', 'SuperAdmin'), 
-                                                         ('subAdmin', 'SubAdmin'),  ('client', 'Client')])
+    user_type = models.CharField(max_length=10, choices=[('superAdmin', 'SuperAdmin'), ('client', 'Client')])
 
     objects = CustomUserManager()
     USERNAME_FIELD = "phone"  # Set the email field as the unique identifier
