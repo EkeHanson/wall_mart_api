@@ -6,6 +6,10 @@ from rest_framework.authtoken.models import Token
 from .models import CustomUser, InvitationCode
 from .serializers import CustomUserSerializer, InvitationCodeSerializer
 import uuid
+import logging
+from rest_framework.views import APIView
+
+logger = logging.getLogger(__name__)
 
 class InvitationCodeViewSet(viewsets.ModelViewSet):
     queryset = InvitationCode.objects.all()
@@ -37,7 +41,10 @@ class CustomUserViewSet(viewsets.ModelViewSet):
         code_instance.save()
         return response
 
-class LoginView(views.APIView):
+
+
+
+class LoginView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
@@ -45,12 +52,16 @@ class LoginView(views.APIView):
         password = request.data.get('password')
 
         if phone is None or password is None:
+            logger.error('Phone or password not provided')
             return Response({'error': 'Please provide both phone and password'}, status=status.HTTP_400_BAD_REQUEST)
 
-        user = authenticate(username=phone, password=password)
+        user = authenticate(request, username=phone, password=password)
 
         if not user:
+            logger.error(f'Invalid credentials for phone: {phone}')
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
         token, created = Token.objects.get_or_create(user=user)
+        logger.info(f'User {user.id} authenticated successfully')
         return Response({'token': token.key}, status=status.HTTP_200_OK)
+

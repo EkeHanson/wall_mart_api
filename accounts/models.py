@@ -28,10 +28,21 @@ class CustomUserManager(BaseUserManager):
 
 
 class CustomUser(AbstractUser):
+
+    LEVEL_CHOICES = [
+    ('VIP', 'VIP'),
+    ('VVIP', 'VVIP'),
+    ('VVVIP', 'VVVIP'),
+    ]
+    
+    level = models.CharField(max_length=5, choices=LEVEL_CHOICES)
     reset_token = models.CharField(max_length=100, blank=True, null=True)
     reset_token_expires = models.DateTimeField(null=True, blank=True)
 
     phone = models.CharField(max_length=15, unique=True)
+
+    balance = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    
     withdrawalPassword = models.CharField(max_length=255)  # Removed min_length
 
     firstName = models.CharField(max_length=255, null=True, blank=True)
@@ -42,7 +53,7 @@ class CustomUser(AbstractUser):
 
     username = models.CharField(max_length=80, unique=False, blank=True, null=True)
     email = models.EmailField(max_length=80,  null=True, blank=True)
-    user_type = models.CharField(max_length=10, choices=[('superAdmin', 'SuperAdmin'), ('client', 'Client')])
+    user_type = models.CharField(max_length=10, choices=[('admin', 'Admin'), ('client', 'Client')])
 
     objects = CustomUserManager()
     USERNAME_FIELD = "phone"  # Set the email field as the unique identifier

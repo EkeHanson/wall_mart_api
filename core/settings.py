@@ -42,7 +42,9 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
+
     'accounts',
+    'orders',
 
 ]
 
@@ -109,14 +111,16 @@ WSGI_APPLICATION = 'core.wsgi.application'
 #     }
 # }
 
+
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'wall_mart_db',
-        'USER': 'wall_mart_db_user',
-        'PASSWORD': 'Nm4u9T3R2ugHdGVnQjoriq16Op4fAMjY',
-        'HOST': 'dpg-cqgbaq9u0jms73fk9170-a.oregon-postgres.render.com',
-        'PORT': '5432',  # Default PostgreSQL port
+        'NAME': 'wall_mart_db_66n4',
+        'USER': 'wall_mart_db_66n4_user',
+        'PASSWORD': 'xaRKEVISswIB7aQReZNgLMalO73iYdlp',
+        'HOST': 'dpg-cqh0fuks1f4s73bgvpk0-a.oregon-postgres.render.com',
+        'PORT': '5432',  # Default port for PostgreSQL
     }
 }
 
