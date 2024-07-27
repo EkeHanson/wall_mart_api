@@ -8,5 +8,5 @@ router.register(r'invitation-codes', InvitationCodeViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('login/', LoginView.as_view(), name='login'),
+    path('login/', LoginView.as_view(), name='login')
 ]

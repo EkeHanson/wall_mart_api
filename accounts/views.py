@@ -14,6 +14,7 @@ logger = logging.getLogger(__name__)
 class InvitationCodeViewSet(viewsets.ModelViewSet):
     queryset = InvitationCode.objects.all()
     serializer_class = InvitationCodeSerializer
+    permission_classes = [AllowAny]
     # permission_classes = [IsAdminUser]
 
     def create(self, request, *args, **kwargs):
@@ -23,6 +24,7 @@ class InvitationCodeViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 class CustomUserViewSet(viewsets.ModelViewSet):
+    permission_classes = [AllowAny]
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
 
@@ -63,5 +65,8 @@ class LoginView(APIView):
 
         token, created = Token.objects.get_or_create(user=user)
         logger.info(f'User {user.id} authenticated successfully')
-        return Response({'token': token.key}, status=status.HTTP_200_OK)
+        context = {'token': token.key,
+                   "user_id" : user.id
+                   }
+        return Response(context, status=status.HTTP_200_OK)
 

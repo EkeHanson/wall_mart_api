@@ -1,9 +1,5 @@
 from rest_framework import serializers
 from .models import CustomUser, InvitationCode
-
-
-
-from rest_framework import serializers
 from .models import CustomUser
 
 class CustomUserSerializer(serializers.ModelSerializer):
