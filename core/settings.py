@@ -111,7 +111,6 @@ WSGI_APPLICATION = 'core.wsgi.application'
 #     }
 # }
 
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -122,8 +121,6 @@ DATABASES = {
         'PORT': '5432',  # Default port for PostgreSQL
     }
 }
-
-
 
 
 # Password validation

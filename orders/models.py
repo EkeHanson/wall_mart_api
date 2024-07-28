@@ -26,7 +26,9 @@ class OrderGrabbing(models.Model):
         
         # Check if the user has already grabbed 3 orders
         if self.user.grabbed_orders_count >= 3:
-            raise ValueError("User has already grabbed 3 orders.")
+            #raise ValueError("User has already grabbed 3 orders.")
+            return "User has already grabbed 3 orders."
+          
 
         # Deduct the price of the order from the user's balance
         self.user.balance -= self.order.price

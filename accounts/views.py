@@ -23,6 +23,27 @@ class InvitationCodeViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(invitationCode)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+# class CustomUserViewSet(viewsets.ModelViewSet):
+#     permission_classes = [AllowAny]
+#     queryset = CustomUser.objects.all()
+#     serializer_class = CustomUserSerializer
+
+#     def create(self, request, *args, **kwargs):
+#         invitationCode = request.data.get('invitationCode')
+#         if not invitationCode:
+#             return Response({"error": "Invitation code is required"}, status=status.HTTP_400_BAD_REQUEST)
+        
+#         try:
+#             code_instance = InvitationCode.objects.get(code=invitationCode, is_used=False)
+#         except InvitationCode.DoesNotExist:
+#             return Response({"error": "Invalid or already used invitation code"}, status=status.HTTP_400_BAD_REQUEST)
+
+#         response = super().create(request, *args, **kwargs)
+#         code_instance.is_used = True
+#         code_instance.save()
+#         return response
+
+
 class CustomUserViewSet(viewsets.ModelViewSet):
     permission_classes = [AllowAny]
     queryset = CustomUser.objects.all()
@@ -39,12 +60,17 @@ class CustomUserViewSet(viewsets.ModelViewSet):
             return Response({"error": "Invalid or already used invitation code"}, status=status.HTTP_400_BAD_REQUEST)
 
         response = super().create(request, *args, **kwargs)
+
+        # Increase balance by 10 after successful user creation
+        user = CustomUser.objects.get(id=response.data['id'])
+        user.balance += 10
+        user.save()
+
         code_instance.is_used = True
         code_instance.save()
         return response
 
-
-
+        
 
 class LoginView(APIView):
     permission_classes = [AllowAny]
