@@ -26,16 +26,18 @@ class OrderGrabbingViewSet(viewsets.ModelViewSet):
             return Response({"error": "Order not found"}, status=status.HTTP_404_NOT_FOUND)
 
         # Check if user has enough balance and has not exceeded the grab limit
-        if user.balance < order.price:
+        if user.balance < order.price -1:
             return Response({"error": "Insufficient balance"}, status=status.HTTP_400_BAD_REQUEST)
 
         if OrderGrabbing.objects.filter(user=user).count() >= 3:
             return Response({"error": "Grab limit reached"}, status=status.HTTP_400_BAD_REQUEST)
 
         # Subtract price from user balance and add a commission
-        user.balance -= order.price
-        user.grabbed_orders_count += 1
-        user.save()
+ 
+        # user.balance -= order.price
+        user.balance - order.price
+  
+        user.grabbed_orders_count + 1
 
         # Calculate commission (2% of order price)
         commission_amount = Decimal('2.00')  # Ensure commission_amount is a Decimal
@@ -46,15 +48,15 @@ class OrderGrabbingViewSet(viewsets.ModelViewSet):
         if user.ordergrabbing_set.exists():
             last_grab_day = user.ordergrabbing_set.latest('grabbed_at').grabbed_at.date()
 
-        # Create order grabbing record
-        grabbing = OrderGrabbing.objects.create(user=user, order=order, commission=commission_amount, grabbed_at=timezone.now())
-        serializer = self.get_serializer(grabbing)
-
         # Update user's commission based on the day
         if last_grab_day is None or last_grab_day == today:
             user.commission2 += commission_amount
         else:
-            user.commission1 = commission_amount
+            user.commission1 += commission_amount
         user.save()
+
+        # Create order grabbing record
+        grabbing = OrderGrabbing.objects.create(user=user, order=order, commission=commission_amount, grabbed_at=timezone.now())
+        serializer = self.get_serializer(grabbing)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
