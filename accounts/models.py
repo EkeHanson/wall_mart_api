@@ -1,10 +1,16 @@
 from django.db import models
-
-# Create your models here.
-from django.db import models
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 
+
+class InvitationCode(models.Model):
+    code = models.CharField(max_length=20, unique=True)
+    is_used = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.code
+    
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password, user_type, **extra_fields):
@@ -28,7 +34,6 @@ class CustomUserManager(BaseUserManager):
 
 
 class CustomUser(AbstractUser):
-
     LEVEL_CHOICES = [
     ('VIP', 'VIP'),
     ('VVIP', 'VVIP'),
@@ -39,9 +44,9 @@ class CustomUser(AbstractUser):
     reset_token = models.CharField(max_length=100, blank=True, null=True)
     reset_token_expires = models.DateTimeField(null=True, blank=True)
 
-    phone = models.CharField(max_length=15, unique=True)
+    phone = models.CharField(max_length=10, unique=True)
 
-    balance = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    balance = models.DecimalField(max_digits=10, decimal_places=1, default=0.0)
 
     commission1 = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     commission2 = models.DecimalField(max_digits=10, decimal_places=2, default=0)
@@ -60,6 +65,9 @@ class CustomUser(AbstractUser):
     email = models.EmailField(max_length=80,  null=True, blank=True)
     user_type = models.CharField(max_length=10, choices=[('admin', 'Admin'), ('client', 'Client')])
 
+    invitationCode = models.ForeignKey(InvitationCode, on_delete=models.SET_NULL, null=True, blank=True)
+    created_ip = models.GenericIPAddressField(null=True, blank=True)
+    
     objects = CustomUserManager()
     USERNAME_FIELD = "phone"  # Set the email field as the unique identifier
     REQUIRED_FIELDS = ["user_type"]
@@ -71,11 +79,3 @@ class CustomUser(AbstractUser):
         verbose_name = "User"
         verbose_name_plural = "Users"
 
-
-class InvitationCode(models.Model):
-    code = models.CharField(max_length=100, unique=True)
-    is_used = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.code

@@ -6,42 +6,28 @@ from rest_framework.authtoken.models import Token
 from .models import CustomUser, InvitationCode
 from .serializers import CustomUserSerializer, InvitationCodeSerializer
 import uuid
+import hashlib
 import logging
 from rest_framework.views import APIView
 
 logger = logging.getLogger(__name__)
 
+
+def generate_short_code():
+    return hashlib.md5(uuid.uuid4().bytes).hexdigest()[:10]  # 10-character hash
+
+
 class InvitationCodeViewSet(viewsets.ModelViewSet):
     queryset = InvitationCode.objects.all()
     serializer_class = InvitationCodeSerializer
     permission_classes = [AllowAny]
-    # permission_classes = [IsAdminUser]
 
     def create(self, request, *args, **kwargs):
-        code = str(uuid.uuid4())
+        code = generate_short_code()  # Use the new method to generate a shorter code
         invitationCode = InvitationCode.objects.create(code=code)
         serializer = self.get_serializer(invitationCode)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-# class CustomUserViewSet(viewsets.ModelViewSet):
-#     permission_classes = [AllowAny]
-#     queryset = CustomUser.objects.all()
-#     serializer_class = CustomUserSerializer
-
-#     def create(self, request, *args, **kwargs):
-#         invitationCode = request.data.get('invitationCode')
-#         if not invitationCode:
-#             return Response({"error": "Invitation code is required"}, status=status.HTTP_400_BAD_REQUEST)
-        
-#         try:
-#             code_instance = InvitationCode.objects.get(code=invitationCode, is_used=False)
-#         except InvitationCode.DoesNotExist:
-#             return Response({"error": "Invalid or already used invitation code"}, status=status.HTTP_400_BAD_REQUEST)
-
-#         response = super().create(request, *args, **kwargs)
-#         code_instance.is_used = True
-#         code_instance.save()
-#         return response
 
 
 class CustomUserViewSet(viewsets.ModelViewSet):
@@ -52,25 +38,37 @@ class CustomUserViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         invitationCode = request.data.get('invitationCode')
         if not invitationCode:
+            logger.error("Invitation code is required")
             return Response({"error": "Invitation code is required"}, status=status.HTTP_400_BAD_REQUEST)
-        
+
         try:
             code_instance = InvitationCode.objects.get(code=invitationCode, is_used=False)
         except InvitationCode.DoesNotExist:
+            logger.error("Invalid or already used invitation code")
             return Response({"error": "Invalid or already used invitation code"}, status=status.HTTP_400_BAD_REQUEST)
 
-        response = super().create(request, *args, **kwargs)
+        # Get the IP address from the request
+        user_ip = request.META.get('REMOTE_ADDR')
 
-        # Increase balance by 10 after successful user creation
-        user = CustomUser.objects.get(id=response.data['id'])
+        # Check if the IP address has already been used
+        # if CustomUser.objects.filter(created_ip=user_ip).exists():
+        #     logger.error("An account has already been created from this IP address")
+        #     return Response({"error": "An account has already been created from this IP address"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Log the request data
+        # logger.info(f"Request data: {request.data}")
+
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        user = serializer.save()
         user.balance += 10
+        user.created_ip = user_ip  # Save the IP address
         user.save()
 
-        code_instance.is_used = True
-        code_instance.save()
-        return response
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        
 
 class LoginView(APIView):
     permission_classes = [AllowAny]
@@ -80,19 +78,21 @@ class LoginView(APIView):
         password = request.data.get('password')
 
         if phone is None or password is None:
-            logger.error('Phone or password not provided')
             return Response({'error': 'Please provide both phone and password'}, status=status.HTTP_400_BAD_REQUEST)
 
         user = authenticate(request, username=phone, password=password)
 
         if not user:
-            logger.error(f'Invalid credentials for phone: {phone}')
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
         token, created = Token.objects.get_or_create(user=user)
-        logger.info(f'User {user.id} authenticated successfully')
-        context = {'token': token.key,
-                   "user_id" : user.id
-                   }
+        
+        # Serialize the invitation code
+        invitation_code_serializer = InvitationCodeSerializer(user.invitationCode)
+        
+        context = {
+            'token': token.key,
+            'user_id': user.id,
+            'user_invitation_code': invitation_code_serializer.data
+        }
         return Response(context, status=status.HTTP_200_OK)
-
