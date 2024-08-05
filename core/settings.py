@@ -110,17 +110,17 @@ WSGI_APPLICATION = 'core.wsgi.application'
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'wall_a6v4',
-        'USER': 'wall_a6v4_user',
-        'PASSWORD': 'IMQMaCUiGuOuBfnlxUPDOXG97rSijsCw',
-        'HOST': 'dpg-cql6lbaj1k6c73edif50-a.oregon-postgres.render.com',
-        'PORT': '5432',  # Default port for PostgreSQL
+        'NAME': 'wall_mart_db_eilf',
+        'USER': 'wall_mart_db_eilf_user',
+        'PASSWORD': 'nB5jcSjpl8fjEetQVfBzszzRPbGVtctm',
+        'HOST': 'dpg-cqobc2aj1k6c73b287a0-a.oregon-postgres.render.com',
+        'PORT': 5432,
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

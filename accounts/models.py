@@ -35,9 +35,9 @@ class CustomUserManager(BaseUserManager):
 
 class CustomUser(AbstractUser):
     LEVEL_CHOICES = [
-    ('VIP', 'VIP'),
-    ('VVIP', 'VVIP'),
-    ('VVVIP', 'VVVIP'),
+    ('VIP1', 'VIP1'),
+    ('VIP2', 'VIP2'),
+    ('VIP3', 'VIP3'),
     ]
     
     level = models.CharField(max_length=5, choices=LEVEL_CHOICES)

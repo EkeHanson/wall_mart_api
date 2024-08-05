@@ -59,7 +59,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
     invitationCode = serializers.CharField(write_only=True, required=True)
     invitationCode_display = InvitationCodeSerializer(source='invitationCode', read_only=True)
     user_type = serializers.CharField(default='client')
-    level = serializers.CharField(default='VIP')
+    level = serializers.CharField(default='VIP1')
 
     class Meta:
         model = CustomUser
