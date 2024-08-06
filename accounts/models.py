@@ -44,7 +44,7 @@ class CustomUser(AbstractUser):
     reset_token = models.CharField(max_length=100, blank=True, null=True)
     reset_token_expires = models.DateTimeField(null=True, blank=True)
 
-    phone = models.CharField(max_length=10, unique=True)
+    phone = models.CharField(max_length=15, unique=True)
 
     balance = models.DecimalField(max_digits=10, decimal_places=1, default=0.0)
     unsettle = models.DecimalField(max_digits=10, decimal_places=1, default=0.0)

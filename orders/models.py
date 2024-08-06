@@ -30,6 +30,7 @@ class OrderGrabbing(models.Model):
           
         # Deduct the price of the order from the user's balance
         # self.user.balance -= self.order.price
+        # self.user.unsettle += commision
         self.user.grabbed_orders_count += 1
         self.user.save()
 
