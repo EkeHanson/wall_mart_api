@@ -114,10 +114,10 @@ WSGI_APPLICATION = 'core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'wall_mart_db_syyo',
-        'USER': 'wall_mart_db_syyo_user',
-        'PASSWORD': '7YjCyooW16bcbEWfKjeNgq4JUBhXe6dR',
-        'HOST': 'dpg-cqoplgij1k6c73d6b0bg-a.oregon-postgres.render.com',
+        'NAME': 'wall_mart_db_9sg4',
+        'USER': 'wall_mart_db_9sg4_user',
+        'PASSWORD': 'U29YJas66nb5jIObLYM68CMSd5Lq5N6j',
+        'HOST': 'dpg-cqp15bo8fa8c73c4ftqg-a.oregon-postgres.render.com',
         'PORT': '5432',
     }
 }
