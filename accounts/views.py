@@ -50,14 +50,6 @@ class CustomUserViewSet(viewsets.ModelViewSet):
         # Get the IP address from the request
         user_ip = request.META.get('REMOTE_ADDR')
 
-        # Check if the IP address has already been used
-        # if CustomUser.objects.filter(created_ip=user_ip).exists():
-        #     logger.error("An account has already been created from this IP address")
-        #     return Response({"error": "An account has already been created from this IP address"}, status=status.HTTP_400_BAD_REQUEST)
-
-        # Log the request data
-        # logger.info(f"Request data: {request.data}")
-
         serializer = self.get_serializer(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

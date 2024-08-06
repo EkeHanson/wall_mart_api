@@ -47,6 +47,7 @@ class CustomUser(AbstractUser):
     phone = models.CharField(max_length=10, unique=True)
 
     balance = models.DecimalField(max_digits=10, decimal_places=1, default=0.0)
+    unsettle = models.DecimalField(max_digits=10, decimal_places=1, default=0.0)
 
     commission1 = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     commission2 = models.DecimalField(max_digits=10, decimal_places=2, default=0)

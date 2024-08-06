@@ -92,61 +92,62 @@ class OrderGrabbingViewSet(viewsets.ModelViewSet):
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         
-        # elif user.level == "VIP3":
-        #     grab_amount = Decimal(20)
-        #     if user.balance < grab_amount - 1:
-        #         return Response({"error": "Insufficient balance"}, status=status.HTTP_400_BAD_REQUEST)
+        elif user.level == "VIP3":
+            grab_amount = Decimal(20)
+            if user.balance < grab_amount - 1:
+                return Response({"error": "Insufficient balance"}, status=status.HTTP_400_BAD_REQUEST)
 
-        #     if user.grabbed_orders_count >= 12:
-        #         return Response({"error": "Grab limit reached"}, status=status.HTTP_400_BAD_REQUEST)
-            
-        #     if user.grabbed_orders_count < 1:
-        #         user.balance = original_balance - Decimal(70) 
-        #     elif user.grabbed_orders_count >= 1:
-        #         user.balance = original_balance - Decimal(120)
-        #     elif user.grabbed_orders_count >= 2:
-        #         user.balance = original_balance - Decimal(200)
-        #     elif user.grabbed_orders_count >= 3:
-        #         user.balance = original_balance - Decimal(500)
-        #     elif user.grabbed_orders_count >= 4:
-        #         user.balance = original_balance - Decimal(900)
-        #     elif user.grabbed_orders_count >= 5:
-        #         user.balance = original_balance - Decimal(1200)
-        #     elif user.grabbed_orders_count >= 6:
-        #         user.balance = original_balance - Decimal(1500)
-        #     elif user.grabbed_orders_count >= 7:
-        #         user.balance = original_balance - Decimal(2200)
-        #     elif user.grabbed_orders_count >= 8:
-        #         user.balance = original_balance - Decimal(3000)
-        #     elif user.grabbed_orders_count >= 9:
-        #         user.balance = original_balance - Decimal(3500)
-        #     elif user.grabbed_orders_count >= 10:
-        #         user.balance = original_balance - Decimal(3950)
-        #     elif user.grabbed_orders_count >= 11:
-        #         user.balance = original_balance - Decimal(4200)
-    
-    
-        #     user.grabbed_orders_count + 1
+            if user.grabbed_orders_count >= 12:
+                return Response({"error": "Grab limit reached"}, status=status.HTTP_400_BAD_REQUEST)
 
-        #     # Calculate commission (20% of order price)
+            match user.grabbed_orders_count:
+                case 0:
+                    user.balance = original_balance - Decimal(70)
+                case 1:
+                    user.balance = original_balance - Decimal(120)
+                case 2:
+                    user.balance = original_balance - Decimal(200)
+                case 3:
+                    user.balance = original_balance - Decimal(500)
+                case 4:
+                    user.balance = original_balance - Decimal(900)
+                case 5:
+                    user.balance = original_balance - Decimal(1200)
+                case 6:
+                    user.balance = original_balance - Decimal(1500)
+                case 7:
+                    user.balance = original_balance - Decimal(2200)
+                case 8:
+                    user.balance = original_balance - Decimal(3000)
+                case 9:
+                    user.balance = original_balance - Decimal(3500)
+                case 10:
+                    user.balance = original_balance - Decimal(3950)
+                case 11:
+                    user.balance = original_balance - Decimal(4200)
+                case _:
+                    pass
 
-        #     commission_amount = Decimal(9)  # Ensure commission_amount is a Decimal
-        #     today = timezone.now().date()  # Get today's date
+            # user.grabbed_orders_count += 1
 
-        #     # Check the last order grabbing day
-        #     last_grab_day = None
-        #     if user.ordergrabbing_set.exists():
-        #         last_grab_day = user.ordergrabbing_set.latest('grabbed_at').grabbed_at.date()
+            # Calculate commission (20% of order price)
+            commission_amount = Decimal(9)  # Ensure commission_amount is a Decimal
+            today = timezone.now().date()  # Get today's date
 
-        #     # Update user's commission based on the day
-        #     if last_grab_day is None or last_grab_day == today:
-        #         user.commission2 += commission_amount
-        #     else:
-        #         user.commission1 += commission_amount
-        #     user.save()
+            # Check the last order grabbing day
+            last_grab_day = None
+            if user.ordergrabbing_set.exists():
+                last_grab_day = user.ordergrabbing_set.latest('grabbed_at').grabbed_at.date()
 
-        #     # Create order grabbing record
-        #     grabbing = OrderGrabbing.objects.create(user=user, commission=commission_amount, grabbed_at=timezone.now())
-        #     serializer = self.get_serializer(grabbing)
+            # Update user's commission based on the day
+            if last_grab_day is None or last_grab_day == today:
+                user.commission2 += commission_amount
+            else:
+                user.commission1 += commission_amount
+            user.save()
 
-        #     return Response(serializer.data, status=status.HTTP_201_CREATED)
+            # Create order grabbing record
+            grabbing = OrderGrabbing.objects.create(user=user, commission=commission_amount, grabbed_at=timezone.now())
+            serializer = self.get_serializer(grabbing)
+
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
