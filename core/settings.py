@@ -114,13 +114,14 @@ WSGI_APPLICATION = 'core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'wall_mart_db_9sg4',
-        'USER': 'wall_mart_db_9sg4_user',
-        'PASSWORD': 'U29YJas66nb5jIObLYM68CMSd5Lq5N6j',
-        'HOST': 'dpg-cqp15bo8fa8c73c4ftqg-a.oregon-postgres.render.com',
+        'NAME': 'wall_mart_db_mw9h',
+        'USER': 'wall_mart_db_mw9h_user',
+        'PASSWORD': 'pk3ESPDUQ73D3QO0XuWr40oviJ62O0MY',
+        'HOST': 'dpg-cqquhmjv2p9s73bburqg-a.oregon-postgres.render.com',
         'PORT': '5432',
     }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

@@ -85,6 +85,9 @@ class LoginView(APIView):
         context = {
             'token': token.key,
             'user_id': user.id,
-            'user_invitation_code': invitation_code_serializer.data
+            'user_invitation_code': invitation_code_serializer.data,
+            'firstName': user.firstName,
+            'phone': user.phone,
+            'lastName': user.lastName
         }
         return Response(context, status=status.HTTP_200_OK)

@@ -57,7 +57,7 @@ class CustomUser(AbstractUser):
     grabbed_orders_count = models.PositiveIntegerField(default=0)
 
     firstName = models.CharField(max_length=255, null=True, blank=True)
-    LastName = models.CharField(max_length=255, null=True, blank=True)
+    lastName = models.CharField(max_length=255, null=True, blank=True)
     middleName = models.CharField(max_length=255, default="None")
 
     country = models.CharField(max_length=255, null=True, blank=True)
