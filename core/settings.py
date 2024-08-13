@@ -26,8 +26,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    'django_crontab',
     'corsheaders',
     'rest_framework',
     'rest_framework_simplejwt',
@@ -108,23 +106,23 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'wall_mart_db_mw9h',
-        'USER': 'wall_mart_db_mw9h_user',
-        'PASSWORD': 'pk3ESPDUQ73D3QO0XuWr40oviJ62O0MY',
-        'HOST': 'dpg-cqquhmjv2p9s73bburqg-a.oregon-postgres.render.com',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'wall_mart_db_mw9h',
+#         'USER': 'wall_mart_db_mw9h_user',
+#         'PASSWORD': 'pk3ESPDUQ73D3QO0XuWr40oviJ62O0MY',
+#         'HOST': 'dpg-cqquhmjv2p9s73bburqg-a.oregon-postgres.render.com',
+#         'PORT': '5432',
+#     }
+# }
 
 
 # Password validation
