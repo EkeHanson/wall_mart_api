@@ -9,6 +9,7 @@ import uuid
 import hashlib
 import logging
 from rest_framework.views import APIView
+from rest_framework.decorators import action
 
 logger = logging.getLogger(__name__)
 
@@ -35,6 +36,18 @@ class CustomUserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
 
+    def partial_update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+
+        if not serializer.is_valid():
+            # Log the specific errors for debugging
+            print(f"PATCH request errors: {serializer.errors}")
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        self.perform_update(serializer)
+        return Response(serializer.data)
+
     def create(self, request, *args, **kwargs):
         invitationCode = request.data.get('invitationCode')
         if not invitationCode:
@@ -60,6 +73,15 @@ class CustomUserViewSet(viewsets.ModelViewSet):
         user.save()
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    @action(detail=False, methods=['get'], url_path='by-level/(?P<level>[^/.]+)')
+    def get_users_by_level(self, request, level=None):
+        if level not in ['VIP1', 'VIP2', 'VIP3']:
+            return Response({"error": "Invalid level"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        users = CustomUser.objects.filter(level=level)
+        serializer = self.get_serializer(users, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class LoginView(APIView):
