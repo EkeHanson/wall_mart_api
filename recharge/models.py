@@ -18,8 +18,8 @@ class Recharge(models.Model):
     payment_id = models.CharField(max_length=100, unique=True, editable=False)
     user_balance = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
     amount_top_up = models.DecimalField(max_digits=10, decimal_places=2)
-    receipt_image = models.ImageField(upload_to='receipts/')
-    #receipt_image = models.ImageField(upload_to='receipts/', blank=True, null=True)
+    # receipt_image = models.ImageField(upload_to='receipts/')
+    receipt_image = models.ImageField(upload_to='receipts/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
