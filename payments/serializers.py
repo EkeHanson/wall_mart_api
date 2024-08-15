@@ -4,7 +4,7 @@ from .models import BankDetail, CryptoWalletDetail
 class BankDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = BankDetail
-        fields = ['id', 'bank_name', 'account_number', 'recipient_name']
+        fields = "__all__"
 
 class CryptoWalletDetailSerializer(serializers.ModelSerializer):
     class Meta:
