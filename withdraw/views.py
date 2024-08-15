@@ -4,10 +4,10 @@ from .serializers import WithdrawSerializer
 from rest_framework.response import Response
 
 class WithdrawViewSet(viewsets.ModelViewSet):
-    queryset = Withdraw.objects.all()
+    # Order the queryset in descending order by 'id' or 'created_at' for LIFO behavior
+    queryset = Withdraw.objects.all().order_by('-created_at')  # Change '-id' to '-created_at' if needed
     serializer_class = WithdrawSerializer
     permission_classes = [permissions.IsAuthenticated]
-    # permission_classes = [permissions.AllowAny]
 
     def perform_create(self, serializer):
         # This will call the validate method in the serializer
@@ -18,5 +18,3 @@ class WithdrawViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-
