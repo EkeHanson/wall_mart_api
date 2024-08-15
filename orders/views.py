@@ -20,7 +20,7 @@ class OrderGrabbingViewSet(viewsets.ModelViewSet):
         user = request.user
 
         original_balance = Decimal( user.balance) 
-        if user.level == "VIP1":
+        if user.level == "VIP1" and  user.balance > 0:
             grab_amount = Decimal(10)
             if user.balance < grab_amount - 1:
                 return Response({"error": "Insufficient balance"}, status=status.HTTP_400_BAD_REQUEST)
@@ -62,7 +62,7 @@ class OrderGrabbingViewSet(viewsets.ModelViewSet):
             serializer = self.get_serializer(grabbing)
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        elif user.level == "VIP2":
+        elif user.level == "VIP2" and  user.balance > 0:
             grab_amount = Decimal(20)
             if user.balance < grab_amount - 1:
                 return Response({"error": "Insufficient balance"}, status=status.HTTP_400_BAD_REQUEST)
@@ -106,7 +106,7 @@ class OrderGrabbingViewSet(viewsets.ModelViewSet):
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         
-        elif user.level == "VIP3":
+        elif user.level == "VIP3" and  user.balance > 0:
             grab_amount = Decimal(20)
             commission_amount = Decimal(9)  # Ensure commission_amount is a Decimal
             if user.balance < grab_amount - 1:
