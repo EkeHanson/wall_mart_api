@@ -2,9 +2,10 @@ from django.db import models
 from django.core.exceptions import ValidationError
 
 class BankDetail(models.Model):
-    bank_name = models.CharField(max_length=100)
-    account_number = models.CharField(max_length=20)
-    recipient_name = models.CharField(max_length=100)
+    bank_name = models.CharField(max_length=100, default="Banco Prepago Tenpo")
+    account_number = models.CharField(max_length=20, default= "111119469406")
+    recipient_name = models.CharField(max_length=100, default= "Gonsalo Osvaldo Cornejo Rivero")
+    ruth = models.CharField(max_length=15, default=1946406-7)
 
     def __str__(self):
         return f"{self.recipient_name} - {self.bank_name}"
