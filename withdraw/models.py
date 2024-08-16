@@ -24,7 +24,7 @@ class Withdraw(models.Model):
 
     def save(self, *args, **kwargs):        
         # Set the user_balance to the user's current balance before saving
-        self.user_balance = self.user.balance
+        self.user_balance = self.user.unsettle
         self.user_firstName= self.user.firstName
         super(Withdraw, self).save(*args, **kwargs)
 

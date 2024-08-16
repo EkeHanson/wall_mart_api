@@ -4,7 +4,7 @@ from .models import Recharge
 class RechargeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recharge
-        fields = ['id', 'user', 'payment_name', 'recharge_method', 'payment_id', 'user_balance', 'amount_top_up', 'receipt_image', 'created_at']
+        fields = ['id', 'user', 'payment_name','user_firstName', 'recharge_method', 'payment_id', 'user_balance', 'amount_top_up', 'receipt_image', 'created_at']
         read_only_fields = ['payment_id', 'user_balance', 'created_at']
     
     def validate_amount_top_up(self, value):

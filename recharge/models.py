@@ -17,6 +17,7 @@ class Recharge(models.Model):
     recharge_method = models.CharField(max_length=20, choices=RECHARGE_METHOD_CHOICES)
     payment_id = models.CharField(max_length=100, unique=True, editable=False)
     user_balance = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
+    user_firstName= models.CharField(max_length=100,  default="Hanson")
     amount_top_up = models.DecimalField(max_digits=10, decimal_places=2)
     # receipt_image = models.ImageField(upload_to='receipts/')
     receipt_image = models.ImageField(upload_to='receipts/', blank=True, null=True)
@@ -29,6 +30,8 @@ class Recharge(models.Model):
         
         # Set the user_balance to the user's current balance before saving
         self.user_balance = self.user.balance
+        self.user_firstName= self.user.firstName
+        
         super(Recharge, self).save(*args, **kwargs)
 
     def __str__(self):

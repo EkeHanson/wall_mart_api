@@ -33,7 +33,7 @@ class InvitationCodeViewSet(viewsets.ModelViewSet):
 
 class CustomUserViewSet(viewsets.ModelViewSet):
     permission_classes = [AllowAny]
-    queryset = CustomUser.objects.all()
+    queryset = CustomUser.objects.all().order_by('-id')  # LIFO principle
     serializer_class = CustomUserSerializer
 
     def partial_update(self, request, *args, **kwargs):
@@ -79,7 +79,7 @@ class CustomUserViewSet(viewsets.ModelViewSet):
         if level not in ['VIP1', 'VIP2', 'VIP3']:
             return Response({"error": "Invalid level"}, status=status.HTTP_400_BAD_REQUEST)
         
-        users = CustomUser.objects.filter(level=level)
+        users = CustomUser.objects.filter(level=level).order_by('-id')  # LIFO principle
         serializer = self.get_serializer(users, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
