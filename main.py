@@ -1,10 +1,19 @@
-{
-  "phone": "8146955393",
-  "invitationCode": "e834819c81",
-  "password": "qwerty",
-  "withdrawalPassword": "qwerty",
-  "balance": "65.0",
-  "commission2": "0.00",
-  "grabbed_orders_count": 0,
-  "level": "VIP1"
-} 
+# import requests
+# url = "https://v3.api.termii.com/api/sms/send"
+# payload = {
+#           "to": "09012125959",
+#            "from": "HAnson",
+#            "sms": "Hi there, testing Termii ",
+#            "type": "plain",
+#            "channel": "generic",
+#            "api_key": "TLcylVFKgAvGdeNAMOzbjyrizSWnadGjdxFblqXHOTaBGkUNhXECmHKBiIXZUo",
+#              "media": {
+#                 "url": "https://media.example.com/file",
+#                 "caption": "your media file"
+#             }   
+#        }
+# headers = {
+# 'Content-Type': 'application/json',
+# }
+# response = requests.request("POST", url, headers=headers, json=payload)
+# print(response.text)

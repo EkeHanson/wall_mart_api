@@ -14,7 +14,7 @@ class WithdrawSerializer(serializers.ModelSerializer):
         amount = data.get('amount')  # Correct field name from the model
 
         # Ensure user balance is sufficient
-        if amount > user.balance:
+        if amount > user.unsettle:
             raise serializers.ValidationError("Insufficient balance.")
       
         # Calculate the total withdrawn amount by the user for the day

@@ -11,7 +11,6 @@ class InvitationCode(models.Model):
     def __str__(self):
         return self.code
     
-
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password, user_type, **extra_fields):
         email = self.normalize_email(email)
@@ -79,4 +78,3 @@ class CustomUser(AbstractUser):
     class Meta:
         verbose_name = "User"
         verbose_name_plural = "Users"
-

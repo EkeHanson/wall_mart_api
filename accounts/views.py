@@ -11,6 +11,12 @@ import logging
 from rest_framework.views import APIView
 from rest_framework.decorators import action
 
+
+from django.utils.crypto import get_random_string
+from django.utils import timezone
+from datetime import timedelta
+#from twilio.rest import Client  # Assuming Twilio for SMS
+
 logger = logging.getLogger(__name__)
 
 
@@ -113,3 +119,63 @@ class LoginView(APIView):
             'lastName': user.lastName
         }
         return Response(context, status=status.HTTP_200_OK)
+
+
+
+# class PasswordResetRequestView(views.APIView):
+#     def post(self, request):
+#         phone = request.data.get('phone')
+
+#         if not phone:
+#             return Response({'error': 'Phone number is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+#         try:
+#             user = CustomUser.objects.get(phone=phone)
+#         except CustomUser.DoesNotExist:
+#             return Response({'error': 'User with this phone number does not exist'}, status=status.HTTP_404_NOT_FOUND)
+
+#         # Generate reset token
+#         reset_token = get_random_string(length=32)
+#         reset_token_expires = timezone.now() + timedelta(hours=1)  # Token valid for 1 hour
+
+#         user.reset_token = reset_token
+#         user.reset_token_expires = reset_token_expires
+#         user.save()
+
+#         # Send SMS with Twilio
+#         try:
+#             #client = Client('TWILIO_ACCOUNT_SID', 'TWILIO_AUTH_TOKEN')
+#             client = Client('https://v3.api.termii.com', 'TLcylVFKgAvGdeNAMOzbjyrizSWnadGjdxFblqXHOTaBGkUNhXECmHKBiIXZUo')
+#             client.messages.create(
+#                 body=f"Your password reset token is: {reset_token}",
+#                 from_='+1234567890',  # Your Twilio phone number
+#                 to=phone
+#             )
+#             return Response({'message': 'Reset token sent via SMS'}, status=status.HTTP_200_OK)
+#         except Exception as e:
+#             return Response({'error': 'Failed to send SMS'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+# class PasswordResetConfirmView(views.APIView):
+#     def post(self, request):
+#         phone = request.data.get('phone')
+#         reset_token = request.data.get('reset_token')
+#         new_password = request.data.get('new_password')
+
+#         if not phone or not reset_token or not new_password:
+#             return Response({'error': 'Phone number, reset token, and new password are required'}, status=status.HTTP_400_BAD_REQUEST)
+
+#         try:
+#             user = CustomUser.objects.get(phone=phone, reset_token=reset_token)
+#         except CustomUser.DoesNotExist:
+#             return Response({'error': 'Invalid phone number or reset token'}, status=status.HTTP_400_BAD_REQUEST)
+
+#         if user.reset_token_expires < timezone.now():
+#             return Response({'error': 'Reset token has expired'}, status=status.HTTP_400_BAD_REQUEST)
+
+#         user.set_password(new_password)
+#         user.reset_token = None
+#         user.reset_token_expires = None
+#         user.save()
+
+#         return Response({'message': 'Password reset successfully'}, status=status.HTTP_200_OK)

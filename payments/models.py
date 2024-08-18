@@ -26,14 +26,8 @@ class CryptoWalletDetail(models.Model):
         ('TRC20', 'TRC20'),
     ]
 
-    wallet_type = models.CharField(max_length=20, choices=WALLET_TYPES)
+    wallet_type = models.CharField(max_length=20, choices=WALLET_TYPES, unique=True)
     wallet_address = models.CharField(max_length=255)
 
     def __str__(self):
         return f"{self.wallet_type} - {self.wallet_address}"
-
-    def save(self, *args, **kwargs):
-        # Check if any instance of CryptoWalletDetail already exists
-        if CryptoWalletDetail.objects.exists() and not self.pk:
-            raise ValidationError("Only one CryptoWalletDetail instance is allowed.")
-        return super(CryptoWalletDetail, self).save(*args, **kwargs)
