@@ -116,6 +116,7 @@ class LoginView(APIView):
             'user_invitation_code': invitation_code_serializer.data,
             'firstName': user.firstName,
             'phone': user.phone,
+            'user_type': user.user_type,
             'lastName': user.lastName
         }
         return Response(context, status=status.HTTP_200_OK)
