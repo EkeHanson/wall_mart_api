@@ -20,6 +20,9 @@ class Recharge(models.Model):
     user_firstName= models.CharField(max_length=100,  default="Hanson")
     amount_top_up = models.DecimalField(max_digits=10, decimal_places=2)
     # receipt_image = models.ImageField(upload_to='receipts/')
+
+    is_approved = models.BooleanField(default=False)  # New field ad
+    
     receipt_image = models.ImageField(upload_to='receipts/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 

@@ -62,6 +62,7 @@ class OrderGrabbingViewSet(viewsets.ModelViewSet):
             serializer = self.get_serializer(grabbing)
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
         elif user.level == "VIP2" and  user.balance > 0:
             grab_amount = Decimal(20)
             if user.balance < grab_amount - 1:
@@ -79,7 +80,7 @@ class OrderGrabbingViewSet(viewsets.ModelViewSet):
 
             # Calculate commission (20% of order price)
 
-            commission_amount = Decimal(9)  # Ensure commission_amount is a Decimal
+            commission_amount = Decimal(12)  # Ensure commission_amount is a Decimal
             today = timezone.now().date()  # Get today's date
 
             # Check the last order grabbing day
@@ -89,14 +90,23 @@ class OrderGrabbingViewSet(viewsets.ModelViewSet):
 
             # Update user's commission based on the day
             if last_grab_day is None or last_grab_day == today:
-                user.commission2 += commission_amount
+                if user.grabbed_orders_count == 0:
+                    user.commission2 += Decimal(12)
+                else:
+                    user.commission2 += Decimal(6)
             else:
-                user.commission1 += commission_amount
+                if user.grabbed_orders_count == 0:
+                    user.commission1 += Decimal(12)
+                else:
+                    user.commission1 += Decimal(6)
             
             if  user.grabbed_orders_count == 0:
-                user.unsettle = Decimal(40) + commission_amount
+                user.unsettle = Decimal(40) +  Decimal(12)
+                # user.unsettle = Decimal(40) + commission_amount
             else:
-                user.unsettle += grab_amount + commission_amount
+                user.unsettle += grab_amount +  Decimal(6)
+                # user.unsettle += grab_amount +  Decimal((30/100) * 20)
+                # user.unsettle += grab_amount + commission_amount
 
             user.save()
 
@@ -108,7 +118,7 @@ class OrderGrabbingViewSet(viewsets.ModelViewSet):
         
         elif user.level == "VIP3" and  user.balance > 0:
             grab_amount = Decimal(20)
-            commission_amount = Decimal(9)  # Ensure commission_amount is a Decimal
+            commission_amount = Decimal(49)  # Ensure commission_amount is a Decimal
             if user.balance < grab_amount - 1:
                 return Response({"error": "Insufficient balance"}, status=status.HTTP_400_BAD_REQUEST)
 
