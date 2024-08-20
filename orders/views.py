@@ -132,37 +132,37 @@ class OrderGrabbingViewSet(viewsets.ModelViewSet):
 
                 case 1:
                     user.balance = original_balance - Decimal(120)
-                    user.unsettle = Decimal(120) + commission_amount
+                    user.unsettle = Decimal(user.unsettle) + Decimal(120) + Decimal(84)
                 case 2:
                     user.balance = original_balance - Decimal(200)
-                    user.unsettle = Decimal(200) + commission_amount
+                    user.unsettle = Decimal(user.unsettle) + Decimal(200) + Decimal(140)
                 case 3:
                     user.balance = original_balance - Decimal(500)
-                    user.unsettle = Decimal(500) + commission_amount
+                    user.unsettle = Decimal(user.unsettle) + Decimal(500) + Decimal(350)
                 case 4:
                     user.balance = original_balance - Decimal(900)
-                    user.unsettle = Decimal(900) + commission_amount
+                    user.unsettle = Decimal(user.unsettle) + Decimal(900) + Decimal(648)
                 case 5:
                     user.balance = original_balance - Decimal(1200)
-                    user.unsettle = Decimal(1200) + commission_amount
+                    user.unsettle = Decimal(user.unsettle) + Decimal(1200) + Decimal(840)
                 case 6:
                     user.balance = original_balance - Decimal(1500)
-                    user.unsettle = Decimal(1500) + commission_amount
+                    user.unsettle = Decimal(user.unsettle) + Decimal(1500) + Decimal(1050)
                 case 7:
                     user.balance = original_balance - Decimal(2200)
-                    user.unsettle = Decimal(2200) + commission_amount
+                    user.unsettle = Decimal(user.unsettle) + Decimal(2200) + Decimal(1540)
                 case 8:
                     user.balance = original_balance - Decimal(3000)
-                    user.unsettle = Decimal(3000) + commission_amount
+                    user.unsettle = Decimal(user.unsettle) + Decimal(3000) + Decimal(2100)
                 case 9:
                     user.balance = original_balance - Decimal(3500)
-                    user.unsettle = Decimal(3500) + commission_amount
+                    user.unsettle =Decimal(user.unsettle) +  Decimal(3500) + Decimal(2450)
                 case 10:
                     user.balance = original_balance - Decimal(3950)
-                    user.unsettle = Decimal(3950) + commission_amount
+                    user.unsettle = Decimal(user.unsettle) + Decimal(3950) + Decimal(2765)
                 case 11:
                     user.balance = original_balance - Decimal(4200)
-                    user.unsettle = Decimal(4200) + commission_amount
+                    user.unsettle = Decimal(user.unsettle) + Decimal(4200) + Decimal(2940)
                 case _:
                     pass
 
