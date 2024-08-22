@@ -110,24 +110,28 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'wall_mart_db_ow61',
-        'USER': 'wall_mart_db_ow61_user',
-        'PASSWORD': '2e8Mg0LvH2ySATyG6b9sYW0K2cmKn2MN',
-        'HOST': 'dpg-cr1qbro8fa8c73ac7sd0-a.oregon-postgres.render.com',
-        'PORT': '5432',
+        'NAME': 'wall_mart_db_fir0',
+        'USER': 'wall_mart_db_fir0_user',
+        'PASSWORD': 'y9Hh4pIix9MwIqk7E9JAyLL2BYI53qwI',
+        'HOST': 'dpg-cr3ietjqf0us73e89pn0-a.oregon-postgres.render.com',
+        'PORT': '5432',  # Default PostgreSQL port
+        'OPTIONS': {
+            'sslmode': 'require',  # Ensure secure connection with the database
+        },
     }
 }
+
 
 
 # Password validation
