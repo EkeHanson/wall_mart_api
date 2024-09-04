@@ -12,6 +12,19 @@ from rest_framework.views import APIView
 from rest_framework.decorators import action
 
 
+from django.contrib.auth import authenticate
+from rest_framework import views, status
+from rest_framework.response import Response
+from django.utils.http import urlsafe_base64_decode
+from django.contrib.auth.tokens import default_token_generator
+
+from .serializers import PasswordResetSerializer
+
+from django.utils.encoding import force_bytes, force_str
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.contrib.auth.tokens import default_token_generator
+
+
 from django.utils.crypto import get_random_string
 from django.utils import timezone
 from datetime import timedelta
@@ -122,61 +135,58 @@ class LoginView(APIView):
         return Response(context, status=status.HTTP_200_OK)
 
 
+class ResetPasswordView(views.APIView):
+    permission_classes = [AllowAny]
 
-# class PasswordResetRequestView(views.APIView):
-#     def post(self, request):
-#         phone = request.data.get('phone')
+    def post(self, request, *args, **kwargs):
+        phone = request.data.get('phone')
 
-#         if not phone:
-#             return Response({'error': 'Phone number is required'}, status=status.HTTP_400_BAD_REQUEST)
+        if not phone:
+            return Response({'error': 'Phone is required'}, status=status.HTTP_400_BAD_REQUEST)
 
-#         try:
-#             user = CustomUser.objects.get(phone=phone)
-#         except CustomUser.DoesNotExist:
-#             return Response({'error': 'User with this phone number does not exist'}, status=status.HTTP_404_NOT_FOUND)
+        try:
+            user = CustomUser.objects.get(phone=phone)
+        except CustomUser.DoesNotExist:
+            return Response({'error': 'User with this Phone number does not exist'}, status=status.HTTP_404_NOT_FOUND)
 
-#         # Generate reset token
-#         reset_token = get_random_string(length=32)
-#         reset_token_expires = timezone.now() + timedelta(hours=1)  # Token valid for 1 hour
+        token = default_token_generator.make_token(user)
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
 
-#         user.reset_token = reset_token
-#         user.reset_token_expires = reset_token_expires
-#         user.save()
+        reset_link = f"{uid}/{token}/"
 
-#         # Send SMS with Twilio
-#         try:
-#             #client = Client('TWILIO_ACCOUNT_SID', 'TWILIO_AUTH_TOKEN')
-#             client = Client('https://v3.api.termii.com', 'TLcylVFKgAvGdeNAMOzbjyrizSWnadGjdxFblqXHOTaBGkUNhXECmHKBiIXZUo')
-#             client.messages.create(
-#                 body=f"Your password reset token is: {reset_token}",
-#                 from_='+1234567890',  # Your Twilio phone number
-#                 to=phone
-#             )
-#             return Response({'message': 'Reset token sent via SMS'}, status=status.HTTP_200_OK)
-#         except Exception as e:
-#             return Response({'error': 'Failed to send SMS'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+        context = {
+            "code" : reset_link
+        }
+
+        return Response(context, status=status.HTTP_200_OK)
 
 
-# class PasswordResetConfirmView(views.APIView):
-#     def post(self, request):
-#         phone = request.data.get('phone')
-#         reset_token = request.data.get('reset_token')
-#         new_password = request.data.get('new_password')
 
-#         if not phone or not reset_token or not new_password:
-#             return Response({'error': 'Phone number, reset token, and new password are required'}, status=status.HTTP_400_BAD_REQUEST)
+class PasswordResetConfirmView(views.APIView):
+    permission_classes = [AllowAny]
 
-#         try:
-#             user = CustomUser.objects.get(phone=phone, reset_token=reset_token)
-#         except CustomUser.DoesNotExist:
-#             return Response({'error': 'Invalid phone number or reset token'}, status=status.HTTP_400_BAD_REQUEST)
+    def post(self, request, uidb64, token, *args, **kwargs):
+        try:
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            user = CustomUser.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, CustomUser.DoesNotExist):
+            user = None
 
-#         if user.reset_token_expires < timezone.now():
-#             return Response({'error': 'Reset token has expired'}, status=status.HTTP_400_BAD_REQUEST)
+        if user is not None and default_token_generator.check_token(user, token):
+            serializer = PasswordResetSerializer(data=request.data)
 
-#         user.set_password(new_password)
-#         user.reset_token = None
-#         user.reset_token_expires = None
-#         user.save()
+            if serializer.is_valid():
+                new_password = serializer.validated_data.get("new_password")
+                user.set_password(new_password)
+                user.save()
 
-#         return Response({'message': 'Password reset successfully'}, status=status.HTTP_200_OK)
+                if not user.is_active:
+                    user.is_active = True
+                    user.save()
+
+                return Response({'message': 'Password has been reset successfully'}, status=status.HTTP_200_OK)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({'error': 'Invalid token or user ID'}, status=status.HTTP_400_BAD_REQUEST)

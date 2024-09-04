@@ -83,3 +83,11 @@ class CustomUserSerializer(serializers.ModelSerializer):
         code_instance.save()
 
         return user
+
+
+class PasswordResetSerializer(serializers.Serializer):
+    new_password = serializers.CharField(write_only=True, required=True, min_length=8)
+
+    def validate_new_password(self, value):
+        # You can add custom validation here
+        return value
